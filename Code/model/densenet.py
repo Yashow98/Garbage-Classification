@@ -14,7 +14,12 @@ from torch import Tensor
 from torchinfo import summary
 from ptflops import get_model_complexity_info
 
-
+__all__ = [
+    'densenet161',
+    'densenet169',
+    'densenet201',
+    'densenet121',
+]
 class _DenseLayer(nn.Module):
     def __init__(self,
                  input_c: int,

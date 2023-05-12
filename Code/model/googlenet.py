@@ -8,7 +8,9 @@ import torch.nn.functional as F
 from torchinfo import summary
 from ptflops import get_model_complexity_info
 
-
+__all__ = [
+    'GoogLeNet',
+]
 class GoogLeNet(nn.Module):
     def __init__(self, num_classes=1000, aux_logits=True, init_weights=False):
         super(GoogLeNet, self).__init__()

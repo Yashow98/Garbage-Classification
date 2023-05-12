@@ -9,13 +9,12 @@ import torch.optim as optim
 from tqdm import tqdm
 
 from data_prepare.mydataset import MyDataset
-from model.resnet_model import resnet18, resnet34, resnet50, resnet101, resnet152
-from model.vgg_model import vgg
-from model.alex_model import AlexNet
+from model import *
 
 # 设置随机数种子，确保结果可重复
 torch.manual_seed(1)
 
+torch.backends.cudnn.benchmark = True  # 加快训练
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(f"using {device} device.")
 
@@ -61,7 +60,7 @@ print(f"using {train_num} images for training, {val_num} images for validation."
 
 
 # 构建模型
-# net = AlexNet(num_classes=6, init_weights=True)
+net = AlexNet(num_classes=6, init_weights=True)
 
 # pretrain
 # As of v0.13, TorchVision offers a new Multi-weight support API
@@ -70,14 +69,14 @@ print(f"using {train_num} images for training, {val_num} images for validation."
 # net = models.alexnet(pretrained=True)
 # net = models.vgg19(pretrained=True)
 
-net = models.resnet152(weights=models.ResNet152_Weights.DEFAULT)  # new api
+# net = models.resnet152(weights=models.ResNet152_Weights.DEFAULT)  # new api
 
-in_features = net.fc.in_features
-net.fc = nn.Linear(in_features, 6)
+# in_features = net.fc.in_features
+# net.fc = nn.Linear(in_features, 6)
 
 # 初始化
-nn.init.normal_(net.fc.weight, 0, 0.01)
-nn.init.constant_(net.fc.bias, 0)
+# nn.init.normal_(net.fc.weight, 0, 0.01)
+# nn.init.constant_(net.fc.bias, 0)
 
 
 # dropout = 0.5

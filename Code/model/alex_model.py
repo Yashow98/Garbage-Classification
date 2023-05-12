@@ -4,6 +4,9 @@ from torchinfo import summary
 from torchvision import models
 from ptflops import get_model_complexity_info
 
+__all__ = [
+    'AlexNet',
+]
 
 class AlexNet(nn.Module):
     def __init__(self, num_classes=1000, init_weights=False):

@@ -3,6 +3,10 @@ import torch
 from torchinfo import summary
 from ptflops import get_model_complexity_info
 
+__all__ = [
+    'vgg',
+]
+
 # official pretrain weights
 model_urls = {
     'vgg11': 'https://download.pytorch.org/models/vgg11-bbd30ac9.pth',

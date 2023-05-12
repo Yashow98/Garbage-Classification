@@ -7,7 +7,13 @@ import torch
 from torchinfo import summary
 from ptflops import get_model_complexity_info
 
-
+__all__ = [
+    'resnet18',
+    'resnet34',
+    'resnet50',
+    'resnet101',
+    'resnet152',
+]
 class BasicBlock(nn.Module):
     """
     18, 34layers block
@@ -26,9 +32,9 @@ class BasicBlock(nn.Module):
         self.downsample = downsample
 
     def forward(self, x):
-        identity = x
+        identity = x  # 恒等变换
         if self.downsample is not None:
-            identity = self.downsample(x)  # 改变通道数
+            identity = self.downsample(x)  # conv1*1 改变通道数
 
         out = self.conv1(x)
         out = self.bn1(out)
@@ -51,7 +57,7 @@ class Bottleneck(nn.Module):
     这么做的好处是能够在top1上提升大概0.5%的准确率。
     可参考Resnet v1.5 https://ngc.nvidia.com/catalog/model-scripts/nvidia:resnet_50_v1_5_for_pytorch
     """
-    expansion = 4
+    expansion = 4  # output channel * expansion
 
     def __init__(self, in_channel, out_channel, stride=1, downsample=None,
                  groups=1, width_per_group=64):
@@ -74,7 +80,7 @@ class Bottleneck(nn.Module):
         self.downsample = downsample
 
     def forward(self, x):
-        identity = x
+        identity = x  # 恒等变换
         if self.downsample is not None:
             identity = self.downsample(x)
 
@@ -111,11 +117,11 @@ class ResNet(nn.Module):
         self.groups = groups
         self.width_per_group = width_per_group
 
-        self.conv1 = nn.Conv2d(3, self.in_channel, kernel_size=7, stride=2,
-                               padding=3, bias=False)  # w/2, h/2
+        self.conv1 = nn.Conv2d(3, self.in_channel, kernel_size=7, stride=2, padding=3, bias=False) # w/2, h/2,224-->112
         self.bn1 = nn.BatchNorm2d(self.in_channel)
         self.relu = nn.ReLU(inplace=True)
-        self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)  # w/2, h/2
+        self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)  # w/2, h/2, 112 --> 56
+
         self.layer1 = self._make_layer(block, 64, blocks_num[0])
         self.layer2 = self._make_layer(block, 128, blocks_num[1], stride=2)
         self.layer3 = self._make_layer(block, 256, blocks_num[2], stride=2)
@@ -124,6 +130,7 @@ class ResNet(nn.Module):
             self.avgpool = nn.AdaptiveAvgPool2d((1, 1))  # output size = (1, 1)
             self.fc = nn.Linear(512 * block.expansion, num_classes)
 
+        # initial
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
@@ -163,7 +170,7 @@ class ResNet(nn.Module):
         x = self.layer3(x)
         x = self.layer4(x)
 
-        if self.include_top:
+        if self.include_top:  # as backbone
             x = self.avgpool(x)
             x = torch.flatten(x, 1)
             x = self.fc(x)
