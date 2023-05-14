@@ -9,7 +9,7 @@ import torch.optim as optim
 from tqdm import tqdm
 
 from data_prepare.mydataset import MyDataset
-from model import *
+import model
 
 # 设置随机数种子，确保结果可重复
 torch.manual_seed(1)
@@ -60,7 +60,7 @@ print(f"using {train_num} images for training, {val_num} images for validation."
 
 
 # 构建模型
-net = AlexNet(num_classes=6, init_weights=True)
+net = model.AlexNet(num_classes=6, init_weights=True)
 
 # pretrain
 # As of v0.13, TorchVision offers a new Multi-weight support API
@@ -100,9 +100,9 @@ net = AlexNet(num_classes=6, init_weights=True)
 
 
 # model_name = 'vgg11'
-# net = vgg(model_name=model_name, num_classes=6, init_weights=True)
+# net = model.vgg(model_name=model_name, num_classes=6, init_weights=True)
 
-# net = resnet50(num_classes=6)
+# net = model.resnet50(num_classes=6)
 
 net.to(device)
 loss_function = nn.CrossEntropyLoss()

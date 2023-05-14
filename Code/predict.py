@@ -5,9 +5,7 @@ from torchvision import transforms, models
 from torch.utils.data import DataLoader
 
 from data_prepare.mydataset import MyDataset
-from model.resnet_model import resnet18, resnet34, resnet50, resnet101, resnet152
-from model.alex_model import AlexNet
-from model.vgg_model import vgg
+import model
 from utils.confusion_matrix import ConfusionMatrix
 
 # 设置随机数种子，确保结果可重复
@@ -40,16 +38,16 @@ class_label = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
 confusion = ConfusionMatrix(num_classes=6, class_labels=class_label)
 
 # 构建模型
-# net = AlexNet(num_classes=6)
+# net = model.AlexNet(num_classes=6)
 # pretrain
 # net = models.alexnet(num_classes=6)
 # net = models.vgg19(num_classes=6)
 net = models.resnet152(num_classes=6)
 
 # model_name = 'vgg11'
-# net = vgg(model_name=model_name, num_classes=6)
+# net = model.vgg(model_name=model_name, num_classes=6)
 
-# net = resnet50(num_classes=6)
+# net = model.resnet50(num_classes=6)
 
 net.to(device)
 
