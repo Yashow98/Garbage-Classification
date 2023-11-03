@@ -28,12 +28,10 @@ class MyDataset(Dataset):
     def __len__(self):
         return len(self.imgs)
 
-    @staticmethod
-    def collate_fn(batch):
-        # 对批量样本做进一步的处理
-        # https://github.com/pytorch/pytorch/blob/67b7e751e6b5931a9f45274653f4f653a4e6cdf6/torch/utils/data/_utils/collate.py
-        images, labels = tuple(zip(*batch))
+def collate_fn(batch):
+    # 对批次样本做一个处理并拼成一个张量
+    images, labels = tuple(zip(*batch))
 
-        images = torch.stack(images, dim=0)
-        labels = torch.as_tensor(labels)
-        return images, labels
+    images = torch.stack(images, dim=0)
+    labels = torch.as_tensor(labels)
+    return images, labels

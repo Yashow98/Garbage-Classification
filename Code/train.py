@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 import torch.optim as optim
 from tqdm import tqdm
 
-from data_prepare.mydataset import MyDataset
+from data_prepare.mydataset import MyDataset, collate_fn
 import model
 
 # 设置随机数种子，确保结果可重复
@@ -51,8 +51,8 @@ train_dataset = MyDataset(txt_path=train_txt_path, transform=train_transform)
 valid_dataset = MyDataset(txt_path=valid_txt_path, transform=valid_transform)
 
 # 构建DataLoader
-train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
-validate_loader = DataLoader(dataset=valid_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
+train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
+validate_loader = DataLoader(dataset=valid_dataset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
 
 train_num = len(train_dataset)
 val_num = len(valid_dataset)
